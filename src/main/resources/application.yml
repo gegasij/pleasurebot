@@ -1,0 +1,9 @@
+bot:
+  name: VladR_bot
+  token: 1886697492:AAFINLXL4tpk0AWANojEIU2nLrAkI9DM2Uc
+
+spring:
+  datasource:
+    url: jdbc:postgresql://ec2-35-178-173-185.eu-west-2.compute.amazonaws.com:5432/postgres
+    password: root
+    username: postgres

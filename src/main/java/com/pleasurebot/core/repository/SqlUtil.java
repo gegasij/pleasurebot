@@ -1,0 +1,20 @@
+package com.pleasurebot.core.repository;
+
+import lombok.experimental.UtilityClass;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+@UtilityClass
+public class SqlUtil {
+    public static LocalDateTime getLocalDateTimeOrNull(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        } else return timestamp.toLocalDateTime();
+    }
+
+    public static long secondsBetween(LocalDateTime from, LocalDateTime to) {
+        return ChronoUnit.SECONDS.between(from, to);
+    }
+}
