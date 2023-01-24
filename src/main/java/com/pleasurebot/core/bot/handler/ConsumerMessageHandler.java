@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pleasurebot.core.bot.MainMenuUtil;
 import com.pleasurebot.core.bot.TelegramBotApi;
 import com.pleasurebot.core.model.ConsumerBundleResponse;
-import com.pleasurebot.core.model.EditMenuMessage;
+import com.pleasurebot.core.model.message.EditMenuMessage;
 import com.pleasurebot.core.repository.BundleRepository;
 import com.pleasurebot.core.service.CallbackDataParser;
 import com.pleasurebot.core.service.ConsumerService;
@@ -42,24 +42,24 @@ public class ConsumerMessageHandler {
             case null -> getConsumerMenuMessages(chatId, messageId);
             default -> MainMenuUtil.getMainEditMenuMessage(chatId, messageId);
         };
-        telegramBotApi.executeEditMenuMessage(editMenuMessage);
+        telegramBotApi.sendEditMenuMessage(editMenuMessage);
         return true;
     }
 
     private EditMenuMessage getRequestMessages(Long chatId, Long messageId) {
         ConsumerBundleResponse consumerBundleResponse = consumerService.requestBundle(1);
-        if (consumerBundleResponse.getBundle() != null) {
-            bundleRepository.updateLastRequestTime(consumerBundleResponse.getBundle().getId(), LocalDateTime.now());
+        if (consumerBundleResponse.getBasicBundle() != null) {
+            bundleRepository.updateLastRequestTime(consumerBundleResponse.getBasicBundle().getId(), LocalDateTime.now());
             return EditMenuMessage.builder()
                     .chatId(chatId)
-                    .messageId(messageId)
-                    .message(consumerBundleResponse.getBundle().getOrder() + ". " + consumerBundleResponse.getBundle().getMessage())
+                    .editedMessageId(messageId)
+                    .message(consumerBundleResponse.getBasicBundle().getOrder() + ". " + consumerBundleResponse.getBasicBundle().getMessage())
                     .menuList(CLIENT_MENU)
                     .build();
         } else {
             return EditMenuMessage.builder()
                     .chatId(chatId)
-                    .messageId(messageId)
+                    .editedMessageId(messageId)
                     .message(consumerBundleResponse.getMessage())
                     .menuList(CLIENT_MENU)
                     .build();
@@ -69,7 +69,7 @@ public class ConsumerMessageHandler {
     private EditMenuMessage getConsumerMenuMessages(Long chatId, Long messageId) {
         return EditMenuMessage.builder()
                 .chatId(chatId)
-                .messageId(messageId)
+                .editedMessageId(messageId)
                 .message(CLIENT_MENU_MESSAGE)
                 .menuList(CLIENT_MENU)
                 .build();

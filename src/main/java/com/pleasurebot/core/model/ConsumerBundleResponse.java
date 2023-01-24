@@ -6,6 +6,6 @@ import lombok.Data;
 @Builder
 @Data
 public class ConsumerBundleResponse {
-    private Bundle bundle;
+    private BasicBundle basicBundle;
     private String message;
 }

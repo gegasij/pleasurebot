@@ -1,17 +1,21 @@
 package com.pleasurebot.core.model;
 
-import lombok.Builder;
-import lombok.Data;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-@Data
-@Builder
-public class Bundle {
-    private Integer id;
-    private Integer bundleConfigId;
-    private String message;
-    private Integer order;
-    private Integer usedCount;
-    private LocalDateTime lastRequestTime;
+import java.sql.Timestamp;
+import java.util.Objects;
+
+@Entity
+@Table(name = "BUNDLE", schema = "public", catalog = "postgres")
+public class Bundle extends BasicBundle {
+    public void setId(Integer id) {
+        super.setId(id);
+    }
+    @Id
+    public Integer getId() {
+        return super.getId();
+    }
 }

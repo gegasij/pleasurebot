@@ -1,9 +1,7 @@
 package com.pleasurebot.core.repository;
 
-import com.pleasurebot.core.mapper.BundleConfigRowMapper;
 import com.pleasurebot.core.mapper.BundleRowMapper;
-import com.pleasurebot.core.model.Bundle;
-import com.pleasurebot.core.model.BundleConfig;
+import com.pleasurebot.core.model.BasicBundle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -17,7 +15,7 @@ import java.util.Map;
 public class BundleRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Bundle> getBundleByBundleConfig(Integer bundleConfigId) {
+    public List<BasicBundle> getBundleByBundleConfig(Integer bundleConfigId) {
         return namedParameterJdbcTemplate.query(
                 "select * from bundle b where b.bundle_config_id = :bundleConfigId",
                 Map.of("bundleConfigId", bundleConfigId),

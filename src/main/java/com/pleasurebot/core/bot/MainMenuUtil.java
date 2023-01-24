@@ -1,7 +1,7 @@
 package com.pleasurebot.core.bot;
 
-import com.pleasurebot.core.model.EditMenuMessage;
-import com.pleasurebot.core.model.SendMenuMessage;
+import com.pleasurebot.core.model.message.EditMenuMessage;
+import com.pleasurebot.core.model.message.MenuMessage;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.util.Pair;
@@ -18,18 +18,18 @@ public class MainMenuUtil {
     private static final List<Pair<String, String>> MAIN_MENU_BUTTON_LIST = List.of(ADMIN_MENU_BUTTON,
             ANONYMOUS_MENU_BUTTON,
             CLIENT_LIST,
-            CONSUMER_LIST);
+            CONSUMER_LIST,Pair.of("test","test"));
 
     public EditMenuMessage getMainEditMenuMessage(@NonNull Long chatId, @NonNull Long messageId) {
         return EditMenuMessage.builder()
                 .menuList(MAIN_MENU_BUTTON_LIST)
                 .chatId(chatId)
-                .messageId(messageId)
+                .editedMessageId(messageId)
                 .message(MAIN_MENU_MESSAGE).build();
     }
 
-    public SendMenuMessage getMainSendMenuMessage(@NonNull Long chatId) {
-        return SendMenuMessage.builder()
+    public MenuMessage getMainSendMenuMessage(@NonNull Long chatId) {
+        return MenuMessage.builder()
                 .menuList(MAIN_MENU_BUTTON_LIST)
                 .chatId(chatId)
                 .message(MAIN_MENU_MESSAGE).build();

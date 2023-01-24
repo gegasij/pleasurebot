@@ -2,8 +2,12 @@ bot:
   name: VladR_bot
   token: 1886697492:AAFINLXL4tpk0AWANojEIU2nLrAkI9DM2Uc
 
+
+defaultMenuColumns: 3
+defaultMenuRows: 4
+
 spring:
   datasource:
-    url: jdbc:postgresql://ec2-35-178-173-185.eu-west-2.compute.amazonaws.com:5432/postgres
+    url: jdbc:postgresql://ec2-13-42-30-187.eu-west-2.compute.amazonaws.com:5432/postgres
     password: root
     username: postgres

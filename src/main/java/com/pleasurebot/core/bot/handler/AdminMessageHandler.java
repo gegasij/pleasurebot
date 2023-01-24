@@ -3,7 +3,7 @@ package com.pleasurebot.core.bot.handler;
 import com.pengrad.telegrambot.model.Update;
 import com.pleasurebot.core.bot.MainMenuUtil;
 import com.pleasurebot.core.bot.TelegramBotApi;
-import com.pleasurebot.core.model.EditMenuMessage;
+import com.pleasurebot.core.model.message.EditMenuMessage;
 import com.pleasurebot.core.service.CallbackDataParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
@@ -37,14 +37,14 @@ public class AdminMessageHandler {
             case null -> getAdminMenuMessages(chatId, messageId);
             default -> MainMenuUtil.getMainEditMenuMessage(chatId, messageId);
         };
-        telegramBotApi.executeEditMenuMessage(editMenuMessage);
+        telegramBotApi.sendEditMenuMessage(editMenuMessage);
         return true;
     }
 
     private EditMenuMessage getUserList(Long chatId, Long messageId) {
         return EditMenuMessage.builder()
                 .chatId(chatId)
-                .messageId(messageId)
+                .editedMessageId(messageId)
                 .message("Вася, пупкин")
                 .menuList(List.of(Pair.of("Back", "admin"))).build();
     }
@@ -52,7 +52,7 @@ public class AdminMessageHandler {
     private EditMenuMessage getAdminMenuMessages(Long chatId, Long messageId) {
         return EditMenuMessage.builder()
                 .chatId(chatId)
-                .messageId(messageId)
+                .editedMessageId(messageId)
                 .message(ADMIN_MENU_MESSAGE)
                 .menuList(ADMIN_MENU).build();
     }
