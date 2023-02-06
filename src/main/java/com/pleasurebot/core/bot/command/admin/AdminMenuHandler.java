@@ -31,7 +31,6 @@ public class AdminMenuHandler implements CommandHandler {
         return switch (startAdminCommand) {
             case "back" -> MainMenuUtil.getMainEditMenuMessage(chatId);
             case "userlist" -> getUserList(chatId, messageId);
-            case null -> getAdminMenuMessages(chatId, messageId);
             default -> MainMenuUtil.getMainEditMenuMessage(chatId);
         };
     }
