@@ -17,7 +17,7 @@ public class AnonymousMessageHandler implements CommandHandler {
     private static final String ANON_START_MESSAGE = "Привет! На связи ваш персональный lovelyBot" + "\n" + " введите пароль, чтобы продолжить";
     private static final String SUCCESS_LOGIN_MESSAGE = "<strong>Отлично! </strong> А теперь приступим";
     private static final List<Pair<String, String>> SUCCESS_LOGIN_MENU = List.of(Pair.of("Поехали!", StartHandler.getMenu()));
-    private static final String FAILED_LOGIN_MESSAGE = "Что-то пошло не так... Попробуй еще раз или попроси партера скинуть пароль заного";
+    private static final String FAILED_LOGIN_MESSAGE = "Что-то пошло не так... Попробуй еще раз или попроси партнера скинуть пароль заново";
     private final UserService userService;
 
     public SimpleMenuMessage handleCommand(Update update) {

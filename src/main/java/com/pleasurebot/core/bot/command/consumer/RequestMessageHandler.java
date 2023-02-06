@@ -38,7 +38,7 @@ public class RequestMessageHandler implements CommandHandler {
         ConsumerBundleResponse consumerBundleResponse = consumerService.requestBundle(user.getId());
         if (consumerBundleResponse.getBasicBundle() != null) {
             SimpleMenuMessage build = SimpleMenuMessage.builder()
-                    .message(consumerBundleResponse.getBasicBundle().getOrder() + ". " + consumerBundleResponse.getBasicBundle().getMessage())
+                    .message(consumerBundleResponse.getBasicBundle().getMessage())
                     .menuList(successMenu)
                     .build();
             Optional.of(attachmentRepository.findByBundleId(consumerBundleResponse.getBasicBundle().getId()))

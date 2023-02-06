@@ -106,7 +106,7 @@ public class ChangeConsumerCredsHandler implements CommandHandler {
     }
 
     private SimpleMenuMessage buildMessage(String password) {
-        String loginMessage = "<strong> Имя пользователя партнера незадано</strong> \n скопируйте имя пользователя в telegram вашего партера и пришлите его боту\n";
+        String loginMessage = "<strong> Имя пользователя партнера незадано</strong> \n скопируйте имя пользователя в telegram вашего партнера и пришлите его боту\n";
         String passwordMessage = "<strong>    Пароль:" + password + "</strong>";
         return SimpleMenuMessage.builder()
                 .message(loginMessage + passwordMessage)
@@ -117,7 +117,7 @@ public class ChangeConsumerCredsHandler implements CommandHandler {
     private SimpleMenuMessage buildMessage(String login, String password) {
         String loginMessage = "<strong>    Имя пользователя: @" + login + "</strong> \n";
         String passwordMessage = "<strong>    Пароль:" + password + "</strong>\n";
-        String helperMessage = " Вы все равно можете изменить имя пользователя партера если сейчас отправите его мне";
+        String helperMessage = " Вы все равно можете изменить имя пользователя партнера если сейчас отправите его мне";
         return SimpleMenuMessage.builder()
                 .message(loginMessage + passwordMessage + helperMessage)
                 .menuList(MENU_LIST)
