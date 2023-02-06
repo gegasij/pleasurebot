@@ -1,12 +1,17 @@
 package com.pleasurebot.core.bot.command.client;
 
+import com.pengrad.telegrambot.BotUtils;
 import com.pengrad.telegrambot.model.Update;
 import com.pleasurebot.core.bot.command.CommandHandler;
 import com.pleasurebot.core.model.BasicBundle;
+import com.pleasurebot.core.model.BasicBundleConfig;
 import com.pleasurebot.core.model.Role;
+import com.pleasurebot.core.model.User;
 import com.pleasurebot.core.model.message.CustomTelegramMenuMessage;
 import com.pleasurebot.core.model.message.TelegramMenuMessage;
+import com.pleasurebot.core.repository.BundleConfigJpaRepository;
 import com.pleasurebot.core.repository.BundleJpaRepository;
+import com.pleasurebot.core.service.utils.BotUtil;
 import com.pleasurebot.core.service.utils.CallbackDataParser;
 import com.pleasurebot.core.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -41,6 +47,7 @@ public class BundlePageHandler implements CommandHandler {
 
 
     private final BundleJpaRepository bundleJpaRepository;
+    private final BundleConfigJpaRepository bundleConfigJpaRepository;
     private final UserService userService;
 
     @Value("${defaultMenuColumns}")
@@ -53,7 +60,6 @@ public class BundlePageHandler implements CommandHandler {
     public TelegramMenuMessage handleCommand(Update update) {
         String data = update.callbackQuery().data();
         String clientMenuCommand = CallbackDataParser.getCommand(data);
-
         if (checkAccessToCommand(update) && Objects.equals(clientMenuCommand, BUNDLE_PAGE_COMMAND)) {
             String parameter1 = CallbackDataParser.getParameter1(data);
             if (parameter1 != null) {
@@ -65,10 +71,14 @@ public class BundlePageHandler implements CommandHandler {
 
     private CustomTelegramMenuMessage sendBundlePage(String parameter1, Update update) {
         List<List<Pair<String, String>>> inlineKeyboardButtons = new ArrayList<>();
+        Optional<User> user = userService.getUser(BotUtil.getChatId(update));
+        user.get();
+        BasicBundleConfig bundleConfig = bundleConfigJpaRepository.findByOwnerUserId(user.get().getId())
+                .get();
         if (NumberUtils.isCreatable(parameter1)) {
             int pageNumber = NumberUtils.toInt(parameter1);
             PageRequest of = PageRequest.of(pageNumber, defaultMenuColumns * defaultMenuRows, Sort.by("order"));
-            Page<BasicBundle> all = bundleJpaRepository.findAll(of);
+            Page<BasicBundle> all = bundleJpaRepository.findAllByBundleConfigId(bundleConfig.getId(),of);
             wrapToMenuButtons(inlineKeyboardButtons, all);
             return CustomTelegramMenuMessage.builder()
                     .inlineKeyboardButtons(inlineKeyboardButtons)

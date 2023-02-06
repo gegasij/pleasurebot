@@ -12,5 +12,6 @@ import java.util.List;
 @Repository
 public interface BundleJpaRepository extends JpaRepository<BasicBundle, Integer> {
     List<BasicBundle> findAllByBundleConfigId(Integer bundleConfigId, Sort sort);
+    Page<BasicBundle> findAllByBundleConfigId(Integer bundleConfigId, Pageable pageable);
     Integer countByBundleConfigId(Integer bundleConfigId);
 }
