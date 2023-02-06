@@ -1,81 +1,70 @@
 package com.pleasurebot.core.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.ParseMode;
-import com.pengrad.telegrambot.request.BaseRequest;
-import com.pengrad.telegrambot.request.EditMessageText;
-import com.pengrad.telegrambot.request.SendMessage;
-import com.pleasurebot.core.model.message.CustomEditMenuMessage;
-import com.pleasurebot.core.model.message.EditMenuMessage;
-import com.pleasurebot.core.model.message.MenuMessage;
+import com.pengrad.telegrambot.request.*;
+import com.pengrad.telegrambot.response.BaseResponse;
+import com.pleasurebot.core.model.Attachment;
+import com.pleasurebot.core.model.message.TelegramMenuMessage;
+import com.pleasurebot.core.service.utils.MediaUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class TelegramBotApi {
     private final TelegramBot telegramBot;
 
-    public void sendMessage(BaseRequest<?, ?> editMessageText) {
-        telegramBot.execute(editMessageText);
+    public BaseResponse sendMessage(BaseRequest<?, ?> editMessageText) {
+        return telegramBot.execute(editMessageText);
     }
 
-    public void sendEditMenuMessage(EditMenuMessage editMenuMessage) {
-        InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
-
-        List<InlineKeyboardButton> inlineKeyboardButtons = editMenuMessage.getMenuList()
-                .stream()
-                .map(it -> new InlineKeyboardButton(it.getFirst()).callbackData(it.getSecond()))
-                .toList();
-
-        keyboardMarkup.addRow(inlineKeyboardButtons.toArray(new InlineKeyboardButton[0]));
-
-        EditMessageText editMessageText = new EditMessageText(editMenuMessage.getChatId(),
-                editMenuMessage.getEditedMessageId().intValue(),
-                editMenuMessage.getMessage())
-                .parseMode(ParseMode.HTML)
-                .disableWebPagePreview(true)
-                .replyMarkup(keyboardMarkup);
-
-        sendMessage(editMessageText);
-    }
-
-    public void sendEditMenuMessage(CustomEditMenuMessage customEditMenuMessage) {
-        InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
-
-        Arrays.stream(customEditMenuMessage.getInlineKeyboardButtons()).forEach(keyboardMarkup::addRow);
-
-        EditMessageText editMessageText = new EditMessageText(customEditMenuMessage.getChatId(),
-                customEditMenuMessage.getEditedMessageId().intValue(),
+    public BaseResponse executeEditMessage(TelegramMenuMessage customEditMenuMessage, Long editMessageId, Long chatId) {
+        if (customEditMenuMessage.getAttachments() != null && !customEditMenuMessage.getAttachments().isEmpty()) {
+            return deleteAndSend(customEditMenuMessage, editMessageId.intValue(), chatId);
+        }
+        InlineKeyboardMarkup keyboardMarkup = null;
+        if (customEditMenuMessage.getInlineKeyboard() != null) {
+            keyboardMarkup = new InlineKeyboardMarkup();
+            Arrays.stream(customEditMenuMessage.getInlineKeyboard()).forEach(keyboardMarkup::addRow);
+        }
+        EditMessageText editMessageText = new EditMessageText(chatId,
+                editMessageId.intValue(),
                 customEditMenuMessage.getMessage())
                 .parseMode(ParseMode.HTML)
-                .disableWebPagePreview(true)
-                .replyMarkup(keyboardMarkup);
+                .disableWebPagePreview(true);
+        if (keyboardMarkup != null) {
+            editMessageText.replyMarkup(keyboardMarkup);
+        }
+        return sendMessage(editMessageText);
 
-        sendMessage(editMessageText);
     }
 
-    public void sendMenuMessage(MenuMessage editMenuMessage) {
-        InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
+    public void executeSendMessage(TelegramMenuMessage editMenuMessage, Long chatId) {
+        AbstractSendRequest<?> request;
+        if (editMenuMessage.getAttachments() != null && !editMenuMessage.getAttachments().isEmpty()) {
+            Attachment s = editMenuMessage.getAttachments().stream().findFirst().get();
+            request = MediaUtil.getMediaMessage(s, chatId, editMenuMessage.getMessage());
+        } else {
+            request = new SendMessage(chatId,
+                    editMenuMessage.getMessage())
+                    .parseMode(ParseMode.HTML)
+                    .disableWebPagePreview(true);
+        }
+        if (editMenuMessage.getInlineKeyboard() != null && request != null) {
+            InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
+            Arrays.stream(editMenuMessage.getInlineKeyboard()).forEach(keyboardMarkup::addRow);
+            request.replyMarkup(keyboardMarkup);
+        }
+        sendMessage(request);
+    }
 
-        List<InlineKeyboardButton> inlineKeyboardButtons = editMenuMessage.getMenuList()
-                .stream()
-                .map(it -> new InlineKeyboardButton(it.getFirst()).callbackData(it.getSecond()))
-                .toList();
-
-        keyboardMarkup.addRow(inlineKeyboardButtons.toArray(new InlineKeyboardButton[0]));
-
-        SendMessage sendMessage = new SendMessage(editMenuMessage.getChatId(),
-                editMenuMessage.getMessage())
-                .parseMode(ParseMode.HTML)
-                .disableWebPagePreview(true)
-                .replyMarkup(keyboardMarkup);
-
-        sendMessage(sendMessage);
+    public BaseResponse deleteAndSend(TelegramMenuMessage telegramMenuMessage, Integer messageId, Long chatId) {
+        DeleteMessage deleteMessage = new DeleteMessage(chatId, messageId);
+        executeSendMessage(telegramMenuMessage, chatId);
+        return sendMessage(deleteMessage);
     }
 }

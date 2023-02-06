@@ -1,17 +1,13 @@
 package com.pleasurebot.core.repository;
 
 import com.pleasurebot.core.model.User;
-import org.springframework.data.jdbc.repository.query.Modifying;
-import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserRepository extends CrudRepository<User, Long> {
-    User findByTelegramId(Long telegramId);
+import java.util.Optional;
 
-    @Modifying
-    @Query("UPDATE \"user\" SET role = :role WHERE telegram_id = :telegramId")
-    boolean updateByFirstName(@Param("role") Long id, @Param("telegramId") String name);
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
+    Optional<User> findByTelegramId(Long aLong);
+    Optional<User> findByLoginAndPassword(String login, String password);
 }

@@ -1,5 +1,6 @@
 package com.pleasurebot.core.controller;
 
+import com.pleasurebot.core.model.CreateUserRequest;
 import com.pleasurebot.core.model.User;
 import com.pleasurebot.core.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody String login) {
-        User user = userService.createUser(login);
+    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest userRequest) {
+        User user = userService.createUser(userRequest.getLogin());
         return Optional.ofNullable(user)
-                .map(it -> ResponseEntity.ok().build())
+                .map(it -> ResponseEntity.ok(user))
                 .orElse(ResponseEntity.internalServerError().build());
     }
 }

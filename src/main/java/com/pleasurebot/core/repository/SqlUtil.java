@@ -17,4 +17,10 @@ public class SqlUtil {
     public static long secondsBetween(LocalDateTime from, LocalDateTime to) {
         return ChronoUnit.SECONDS.between(from, to);
     }
+    public static long hoursBetween(LocalDateTime from, LocalDateTime to) {
+        return ChronoUnit.HOURS.between(from, to);
+    }
+    public static long minutesBetween(LocalDateTime from, LocalDateTime to) {
+        return ChronoUnit.MINUTES.between(from, to);
+    }
 }

@@ -21,7 +21,7 @@ public class TelegramController {
     @GetMapping("update")
     public ResponseEntity<Object> updateBundle() {
         User user= new User();
-        user.setTelegramId(new Random().nextInt());
+        user.setTelegramId(new Random().nextLong());
         userRepository.save(user);
         return ResponseEntity.ok().build();
     }

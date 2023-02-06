@@ -1,7 +1,7 @@
 package com.pleasurebot.core.service;
 
 import com.pleasurebot.core.model.BasicBundle;
-import com.pleasurebot.core.model.BundleConfig;
+import com.pleasurebot.core.model.BasicBundleConfig;
 import com.pleasurebot.core.model.ConsumerBundleResponse;
 import com.pleasurebot.core.repository.BundleConfigRepository;
 import com.pleasurebot.core.repository.BundleRepository;
@@ -22,45 +22,55 @@ public class ConsumerService {
     private final BundleRepository bundleRepository;
 
     public ConsumerBundleResponse requestBundle(Integer attachedUserId) {
-        BundleConfig bundleConfig = bundleConfigRepository.getBundleByAttachedUserId(attachedUserId);
-        List<BasicBundle> basicBundle = bundleRepository.getBundleByBundleConfig(bundleConfig.getId());
+        BasicBundleConfig basicBundleConfig = bundleConfigRepository.getBundleByAttachedUserId(attachedUserId);
+        List<BasicBundle> basicBundle = bundleRepository.getBundleByBundleConfig(basicBundleConfig.getId());
 
-        long frequency = bundleConfig.getFrequency();
-        if (frequency != 0 && isNeedToWaitMore(bundleConfig, frequency)) {
-            return ConsumerBundleResponse.builder().message("Еще не время").build();
+        long frequency = basicBundleConfig.getFrequency();
+        if (frequency != 0 && isNeedToWaitMore(basicBundleConfig, frequency)) {
+            return buildWaitMessage(basicBundleConfig);
         }
-        if (bundleConfig.isAlwaysNew()) {
-            boolean isNoBundleUsedZeroTimes = basicBundle.stream()
-                    .anyMatch(it -> it.getUsedCount().equals(0));
-            if (isNoBundleUsedZeroTimes) {
-                return ConsumerBundleResponse.builder().message("сообщения закончились").build();
-            }
+        if (basicBundleConfig.isAlwaysNew()) {
+            basicBundle = basicBundle.stream()
+                    .filter(it -> it.getUsedCount() == 0)
+                    .toList();
         }
-        if (bundleConfig.isRandomRandomOrder()) {
-            if (!bundleConfig.isAlwaysNew()) {
-                return ConsumerBundleResponse.builder().basicBundle(basicBundle.get(new Random().nextInt(basicBundle.size()))).build();
-            } else {
-                return basicBundle.stream()
-                        .filter(it -> it.getUsedCount().equals(0))
-                        .min(Comparator.comparingInt(BasicBundle::getOrder))
-                        .map(it -> ConsumerBundleResponse.builder().basicBundle(it).build())
-                        .orElse(ConsumerBundleResponse.builder().message("что-то пошло не так 1").build());
-            }
+        if (basicBundle.isEmpty()) {
+            return ConsumerBundleResponse.builder().message("сообщения закончились").build();
         }
-        return basicBundle.stream()
-                .filter(it -> it.getUsedCount().equals(0))
-                .min(Comparator.comparingInt(BasicBundle::getUsedCount))
-                .map(BasicBundle::getUsedCount)
-                .map(it -> basicBundle.stream().filter(bndl -> bndl.getUsedCount().equals(it)).toList())
-                .stream()
-                .flatMap(Collection::stream)
-                .min(Comparator.comparingInt(BasicBundle::getOrder))
-                .map(it -> ConsumerBundleResponse.builder().basicBundle(it).build())
-                .orElse(ConsumerBundleResponse.builder().message("что-то пошло не так 1").build());
+        if (basicBundleConfig.isRandomOrder()) {
+            return ConsumerBundleResponse.builder().basicBundle(basicBundle.get(new Random().nextInt(basicBundle.size()))).build();
+        } else {
+            return basicBundle.stream()
+                    .min(Comparator.comparingInt(BasicBundle::getOrder))
+                    .map(it -> ConsumerBundleResponse.builder().basicBundle(it).build())
+                    .orElse(ConsumerBundleResponse.builder().message("что-то пошло не так 1").build());
+        }
+//        return basicBundle.stream()
+//                .filter(it -> it.getUsedCount() == 0)
+//                .min(Comparator.comparingInt(BasicBundle::getUsedCount))
+//                .map(BasicBundle::getUsedCount)
+//                .map(it -> basicBundle.stream().filter(bndl -> bndl.getUsedCount() == it).toList())
+//                .stream()
+//                .flatMap(Collection::stream)
+//                .min(Comparator.comparingInt(BasicBundle::getOrder))
+//                .map(it -> ConsumerBundleResponse.builder().basicBundle(it).build())
+//                .orElse(ConsumerBundleResponse.builder().message("что-то пошло не так 1").build());
     }
 
-    private static boolean isNeedToWaitMore(BundleConfig bundleConfig, long frequency) {
-        return bundleConfig.getLastRequestTime() != null && frequency > SqlUtil.secondsBetween(bundleConfig.getLastRequestTime(), LocalDateTime.now());
+    private static ConsumerBundleResponse buildWaitMessage(BasicBundleConfig basicBundleConfig) {
+        long l = SqlUtil.secondsBetween(basicBundleConfig.getLastRequestTime(), LocalDateTime.now());
+        long l1 = basicBundleConfig.getFrequency() - l;
+        LocalDateTime from = LocalDateTime.now();
+        LocalDateTime to = from.plusSeconds(l1);
+        long hoursBetween = SqlUtil.hoursBetween(from, to);
+        long minutesBetween = SqlUtil.minutesBetween(from, to);
+        String waitTime = "%d часов %d мин.".formatted(hoursBetween, minutesBetween - (60 * hoursBetween));
+        String message = "Вам осталось ждать %s".formatted(waitTime);
+        return ConsumerBundleResponse.builder().message(message).build();
+    }
+
+    private static boolean isNeedToWaitMore(BasicBundleConfig basicBundleConfig, long frequency) {
+        return basicBundleConfig.getLastRequestTime() != null && frequency > SqlUtil.secondsBetween(basicBundleConfig.getLastRequestTime(), LocalDateTime.now());
     }
 
 }

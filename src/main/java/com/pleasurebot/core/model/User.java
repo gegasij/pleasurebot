@@ -1,19 +1,32 @@
 package com.pleasurebot.core.model;
 
-import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Table
-@Data
+@Entity
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@Table(name = "user", schema = "public", catalog = "postgres")
 public class User {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "id")
     private int id;
-    private long telegramId;
+    @Column(name = "telegram_id")
+    private Long telegramId;
+    @Column(name = "bot_state")
+    private Integer botState;
+    @Column(name = "login")
     private String login;
+    @Column(name = "password")
     private String password;
+    @Column(name = "role")
     private Integer role;
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
 }

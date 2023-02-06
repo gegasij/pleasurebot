@@ -24,8 +24,8 @@ public class BundleRepository {
 
     public void updateLastRequestTime(Integer bundleId, LocalDateTime lastRequestTime) {
         namedParameterJdbcTemplate.update("update bundle " +
-                        "set last_request_time = :lastRequestTime " +
-                        "where id = :bundleId",
+                        "set last_request_time = :lastRequestTime, used_count=used_count+1 where" +
+                        " id = :bundleId",
                 Map.of("bundleId", bundleId, "lastRequestTime", lastRequestTime));
     }
 }

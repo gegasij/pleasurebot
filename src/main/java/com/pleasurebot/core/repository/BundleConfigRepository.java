@@ -1,7 +1,7 @@
 package com.pleasurebot.core.repository;
 
 import com.pleasurebot.core.mapper.BundleConfigRowMapper;
-import com.pleasurebot.core.model.BundleConfig;
+import com.pleasurebot.core.model.BasicBundleConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -15,13 +15,14 @@ public class BundleConfigRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<BundleConfig> getBundleByOwnerId(Integer ownerUserId) {
-        return namedParameterJdbcTemplate.query(
-                "select * from Bundle_Config bc where bc.owner_user_id = :ownerUserId",
-                Map.of("ownerUserId", ownerUserId),
-                new BundleConfigRowMapper());
+    public void updateLastRequestTime(Integer attachedUserId) {
+        namedParameterJdbcTemplate.update("update Bundle_Config bc " +
+                        "set last_request_time = now() where" +
+                        " attached_user_id   = :attachedUserId",
+                Map.of("attachedUserId", attachedUserId));
     }
-    public BundleConfig getBundleByAttachedUserId(Integer attachedUserId) {
+
+    public BasicBundleConfig getBundleByAttachedUserId(Integer attachedUserId) {
         return namedParameterJdbcTemplate.queryForObject(
                 "select * from Bundle_Config bc where bc.attached_user_id = :attachedUserId",
                 Map.of("attachedUserId", attachedUserId),
