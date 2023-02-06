@@ -11,7 +11,11 @@ public class TelegramBotUpdateListener {
         telegramBot.setUpdatesListener(updates -> {
             long startTime = System.currentTimeMillis();
             Update update = updates.get(0);
-            updateResolver.resolveUpdate(update);
+            try{
+                updateResolver.resolveUpdate(update);
+            } catch (Exception exception){
+                System.out.println(exception);
+            }
             System.out.println("time processing " + ((float) (System.currentTimeMillis() - startTime)) / 1000);
             return update.updateId();
             //return UpdatesListener.CONFIRMED_UPDATES_ALL;
