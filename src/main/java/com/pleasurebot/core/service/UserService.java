@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -21,11 +22,16 @@ public class UserService {
 
     public User createUser(String login) {
         login = convertToClearUsername(login);
+        Optional<User> byLogin = userRepository.findByLogin(login);
+        if (byLogin.isPresent()) {
+            return byLogin.get();
+        }
         User user = new User();
         user.setLogin(login);
         user.setBotState(BotState.NONE.getValue());
         user.setRole(Role.CLIENT.getRoleId());
         user.setPassword(generatePassword());
+        user.setCreationDate(LocalDateTime.now());
         userRepository.save(user);
         return user;
     }

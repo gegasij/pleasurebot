@@ -2,7 +2,6 @@ bot:
   name: VladR_bot
   token: 1886697492:AAFINLXL4tpk0AWANojEIU2nLrAkI9DM2Uc
 
-
 defaultMenuColumns: 3
 defaultMenuRows: 4
 
@@ -18,3 +17,5 @@ spring:
           batch_size: 20
         order_updates: true
     show-sql: true
+server:
+  port: 8081
