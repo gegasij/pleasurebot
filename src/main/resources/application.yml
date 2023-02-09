@@ -18,4 +18,5 @@ spring:
         order_updates: true
     show-sql: true
 server:
-  port: 8081
+  servlet:
+    context-path: /bot
