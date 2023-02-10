@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>pleasurebot</name>
     <description>pleasurebot</description>
+    <packaging>war</packaging>
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
