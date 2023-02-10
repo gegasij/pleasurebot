@@ -1,7 +1,6 @@
 bot:
   name: VladR_bot
   token: 1886697492:AAFINLXL4tpk0AWANojEIU2nLrAkI9DM2Uc
-
 defaultMenuColumns: 3
 defaultMenuRows: 4
 spring:
@@ -23,7 +22,12 @@ spring:
 server:
   servlet:
     context-path: /bot
-
+logging:
+  file:
+    name: log.txt
+    path: /logs
+  level:
+    com.pleasurebot.core: debug
 ---
 spring:
   config:
