@@ -1,6 +1,7 @@
 package com.pleasurebot.core.bot.command.consumer;
 
 import com.pengrad.telegrambot.model.Update;
+import com.pleasurebot.core.bot.TelegramBotApi;
 import com.pleasurebot.core.bot.command.CommandHandler;
 import com.pleasurebot.core.model.ConsumerBundleResponse;
 import com.pleasurebot.core.model.User;
@@ -29,8 +30,10 @@ public class RequestMessageHandler implements CommandHandler {
     private final AttachmentRepository attachmentRepository;
     private final ConsumerService consumerService;
     private final UserRepository userRepository;
-    private static final List<Pair<String, String>> successMenu = List.of(Pair.of("Готово", ConsumerMessageHandler.getMenuCommand()));
-    private static final List<Pair<String, String>> failedMenu = List.of(Pair.of("Готово", ConsumerMessageHandler.getMenuCommand()));
+    private final TelegramBotApi telegramBotApi;
+    private static final Pair<String, String> BACK = Pair.of("назад", ConsumerMessageHandler.getMenuCommand());
+    private static final List<Pair<String, String>> successMenu = List.of(Pair.of("Еще сообщение!", RequestMessageHandler.getCommandMenu()), BACK);
+    private static final List<Pair<String, String>> failedMenu = List.of(Pair.of("Повторить!", RequestMessageHandler.getCommandMenu()), BACK);
 
     @Override
     public TelegramMenuMessage handleCommand(Update update) {
@@ -42,16 +45,19 @@ public class RequestMessageHandler implements CommandHandler {
                     .menuList(successMenu)
                     .build();
             Optional.of(attachmentRepository.findByBundleId(consumerBundleResponse.getBasicBundle().getId()))
-                    .filter(it->!it.isEmpty())
+                    .filter(it -> !it.isEmpty())
                     .ifPresent(build::setAttachments);
             bundleRepository.updateLastRequestTime(consumerBundleResponse.getBasicBundle().getId(), LocalDateTime.now());
             bundleConfigRepository.updateLastRequestTime(user.getId());
-            return build;
+            telegramBotApi.executeSendMessage(build, BotUtil.getChatId(update));
+            return null;
         } else {
-            return SimpleMenuMessage.builder()
+            SimpleMenuMessage build = SimpleMenuMessage.builder()
                     .message(consumerBundleResponse.getMessage())
                     .menuList(failedMenu)
                     .build();
+            telegramBotApi.executeSendMessage(build, BotUtil.getChatId(update));
+            return null;
         }
     }
 

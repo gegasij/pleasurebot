@@ -17,7 +17,7 @@
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <server.destination>/opt/jetty/my_base/webapps</server.destination>
+        <server.destination>/usr/share/tomcat/webapps</server.destination>
     </properties>
     <dependencies>
         <dependency>
