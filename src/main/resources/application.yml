@@ -11,8 +11,6 @@ spring:
           batch_size: 20
         order_updates: true
     show-sql: true
-  profiles:
-    active: dev
 logging:
   file:
     name: log.txt
