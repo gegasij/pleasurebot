@@ -1,14 +1,6 @@
 package com.pleasurebot.core;
 
-import com.pleasurebot.core.model.BotConfig;
-import com.pleasurebot.core.model.BundleList;
-import com.pleasurebot.core.service.DriveBundleAdapter;
-import com.pleasurebot.core.configuration.TelegramBotConfiguration;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Arrays;
 
 @SpringBootTest
 class PleasurebotApplicationTests {
