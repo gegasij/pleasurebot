@@ -11,6 +11,8 @@ spring:
           batch_size: 20
         order_updates: true
     show-sql: true
+  profiles:
+    active: dev
 logging:
   file:
     name: log.txt
@@ -19,6 +21,12 @@ logging:
     com.pleasurebot.core: debug
 server:
   port: 8081
+  ssl:
+    key-store: classpath:keystore/baeldung.p12
+    key-store-type: PKCS12
+    key-store-password: prostobarni
+    key-alias: baeldung
+    enabled: true
 ---
 spring:
   config:
