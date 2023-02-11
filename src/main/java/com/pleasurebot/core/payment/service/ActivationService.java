@@ -24,6 +24,6 @@ public class ActivationService {
 
     @NotNull
     private static String generateMessage(User it) {
-        return "Ваш пароль %s. Введите этот пароль боту https://t.me/myLoveely_bot. Если возникнут вопросы использования бота, можете смело обращаться ко мне в личку @ireut".formatted(it.getPassword());
+        return "Ваш пароль %s. Введите этот пароль боту @myLoveely_bot. Если возникнут вопросы использования бота, можете смело обращаться ко мне в личку @ireut".formatted(it.getPassword());
     }
 }

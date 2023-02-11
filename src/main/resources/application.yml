@@ -19,6 +19,8 @@ logging:
     path: /logs
   level:
     com.pleasurebot.core: debug
+server:
+  port: 8081
 ---
 spring:
   config:
