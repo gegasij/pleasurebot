@@ -1,0 +1,35 @@
+{
+  "botToken": "botToken",
+  "answerMessage": [
+    {
+      "command": "/start",
+      "isPublic": true,
+      "text": "myText",
+      "menuButtons": [
+        {
+          "text": "textMenuButton",
+          "command": "/newCommand"
+        }
+      ]
+    },
+    {
+      "command": "/menu",
+      "isPublic": true,
+      "text": "menuText2",
+      "menuButtons": null
+    }
+  ],
+  "invoice": {
+    "providerToken": "284685063:TEST:ZWFmZmY0Zjk2YjY0",
+    "payment": [
+      {
+        "title": "title",
+        "description": "description",
+        "payload": "payload",
+        "currency": "USD",
+        "price": 1000
+      }
+    ]
+  }
+}
+}
