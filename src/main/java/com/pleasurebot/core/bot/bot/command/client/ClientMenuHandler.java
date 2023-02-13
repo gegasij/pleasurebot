@@ -28,7 +28,7 @@ public class ClientMenuHandler implements CommandHandler {
     private static final List<List<Pair<String, String>>> CLIENT_MENU = List.of(ROW1_MENU,ROW2_MENU);
 
 
-    private static final String CLIENT_MENU_MESSAGE = "Your client options";
+    private static final String CLIENT_MENU_MESSAGE = "Выберите, что хотите сделать";
     private final UserService userService;
     private final AnonymousMessageHandler anonymousMessageHandler;
 
