@@ -27,7 +27,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:postgresql://35.176.106.181:5432/dev
+    url: jdbc:postgresql://35.176.106.181:5432/prod
     password: root
     username: postgres
   jpa:

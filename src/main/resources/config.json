@@ -52,10 +52,15 @@
     {
       "command": "/step5",
       "isPublic": true,
-      "text": "Остались вопросы?\n можете знаписать на почту mylovelybot.contact@gmail.com\n или напрямую в telegram @ireut",
+      "text": "Нажмите на кнопку \"Видео\" ниже, чтобы посмотреть ролик о том как пользоваться myLovelyBot\n\nОстались вопросы?\n можете знаписать на почту mylovelybot.contact@gmail.com\n или напрямую в telegram @ireut",
       "menuButtons": [
         {
-          "text": "Теперь покупаю!",
+          "text": "Видео",
+          "command": "/firstInvoice",
+          "link": "https://drive.google.com/file/d/1hJKioRBh1F22KdYvKRn2N0rYJw908BJF/view?usp=sharing"
+        },
+        {
+          "text": "Купить",
           "command": "/firstInvoice"
         },
         {

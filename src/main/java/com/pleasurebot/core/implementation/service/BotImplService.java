@@ -55,10 +55,10 @@ public class BotImplService {
     public BaseRequest<?, ?> resolveSuccessPayment(Update update) {
         User user = userService.createUser(BotUtil.getTelegramUsername(update));
         String text = "Спасибо за приобритение MylovelyBot! \nTеперь переходите к боту @myLoveely_bot и введите ему этот пароль <code>" + user.getPassword() + "</code>";
-        text = text + "\nЕсли возникнут вопросы использования бота, можете смело обращаться ко мне в личку @ireut";
-        SendMessage sendMessage = new SendMessage(BotUtil.getChatId(update), text)
+        String link="https://drive.google.com/file/d/1hJKioRBh1F22KdYvKRn2N0rYJw908BJF/view?usp=sharing";
+        text = text + "\nЕсли возникнут вопросы использования бота, можете смело обращаться ко мне в личку @ireut, или вы можете посмотреть обучающий ролик по ссылке "+link ;
+        return new SendMessage(BotUtil.getChatId(update), text)
                 .parseMode(ParseMode.HTML);
-        return sendMessage;
     }
 
     public static void main(String[] args) throws IOException {
