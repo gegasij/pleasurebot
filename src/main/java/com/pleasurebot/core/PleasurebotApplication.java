@@ -13,5 +13,4 @@ public class PleasurebotApplication {
     public static void main(String[] args) {
         SpringApplication.run(PleasurebotApplication.class, args);
     }
-
 }

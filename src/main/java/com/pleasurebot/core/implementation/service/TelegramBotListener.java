@@ -1,20 +1,20 @@
-package com.pleasurebot.core.payment.bot;
+package com.pleasurebot.core.implementation.service;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-@Component(value = "activatorBotListener")
-public class TelegramBotUpdateListener {
-
-    public TelegramBotUpdateListener(@Qualifier("activatorBot") TelegramBot telegramBot, UpdateResolver updateResolver, TelegramBotApi telegramBotApi) {
+@Component
+public class TelegramBotListener {
+    public TelegramBotListener(@Qualifier("implementation") TelegramBot telegramBot, UpdateResolver updateResolver) {
         telegramBot.setUpdatesListener(updates -> {
             long startTime = System.currentTimeMillis();
             Update update = updates.get(0);
-            try{
+            try {
                 updateResolver.resolveUpdate(update);
-            } catch (Exception exception){
+            } catch (Exception exception) {
                 System.out.println(exception);
             }
             System.out.println("time processing " + ((float) (System.currentTimeMillis() - startTime)) / 1000);
@@ -22,5 +22,4 @@ public class TelegramBotUpdateListener {
             //return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
     }
-
 }

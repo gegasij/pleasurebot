@@ -21,12 +21,6 @@ logging:
     com.pleasurebot.core: debug
 server:
   port: 8081
-  ssl:
-    key-store: classpath:keystore/baeldung.p12
-    key-store-type: PKCS12
-    key-store-password: prostobarni
-    key-alias: baeldung
-    enabled: true
 ---
 spring:
   config:
