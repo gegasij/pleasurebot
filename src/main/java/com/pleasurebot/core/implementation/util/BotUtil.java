@@ -22,11 +22,13 @@ public class BotUtil {
     }
 
     public static String getTelegramUsername(Update update) {
-        if (update.callbackQuery() != null) {
+        if (update.callbackQuery() != null
+                && update.callbackQuery().message() != null
+                && update.callbackQuery().message().chat() != null) {
             if (update.callbackQuery().message() != null) {
                 return update.callbackQuery().message().chat().username();
             }
-        } else if (update.message() != null) {
+        } else if (update.message() != null && update.message().chat() != null) {
             return update.message().chat().username();
         }
         throw new RuntimeException("cant find chatID " + update);

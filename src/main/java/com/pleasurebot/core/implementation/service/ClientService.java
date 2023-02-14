@@ -5,15 +5,17 @@ import com.pleasurebot.core.implementation.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ClientService {
     private final ClientRepository clientRepository;
 
-    public Client getOrCreateClient(Long chatId) {
+    public Client getOrCreateClient(Long chatId, String telegramUsername) {
         return clientRepository.findByChatId(chatId)
-                .orElseGet(()->clientRepository.save(Client.builder().chatId(chatId).isPayed(false).build()));
+                .orElseGet(() -> clientRepository.save(Client.builder()
+                        .chatId(chatId)
+                        .username(telegramUsername)
+                        .isPayed(false)
+                        .build()));
     }
 }

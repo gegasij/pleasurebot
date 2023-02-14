@@ -17,5 +17,7 @@ public class Client {
     @Id
     private Integer id;
     private Long chatId;
+    private String username;
+    private String lastCommandActive;
     private Boolean isPayed;
 }

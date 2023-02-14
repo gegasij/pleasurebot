@@ -27,20 +27,21 @@ public class UpdateResolver {
     }
 
     public void resolveUpdate(Update update) {
-        Client client = clientService.getOrCreateClient(BotUtil.getChatId(update));
+        Client client = clientService.getOrCreateClient(BotUtil.getChatId(update), BotUtil.getTelegramUsername(update));
         BaseRequest<?, ?> request = null;
         if (BotUtil.getCommand(update) != null) {
             request = botImplService.resolveMessage(botImpl, update);
+            client.setLastCommandActive(BotUtil.getCommand(update));
         } else if (update.preCheckoutQuery() != null) {
             request = botImplService.resolvePreCheckoutQuery(update);
         } else if (update.message().successfulPayment() != null) {
             client.setIsPayed(true);
-            clientRepository.save(client);
             request = botImplService.resolveSuccessPayment(update);
 
         }
         if (request != null) {
             telegramBot.execute(request);
+            clientRepository.save(client);
         }
     }
 }
